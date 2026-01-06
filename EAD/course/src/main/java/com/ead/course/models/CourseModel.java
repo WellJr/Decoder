@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -45,7 +47,8 @@ public class CourseModel implements Serializable {
     private UUID userInstructor;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // --> A informação aparece apenas em ações de escrita
-    @OneToMany(mappedBy = "course") // --> course é o atributo dentro de modulo usado como chave estrangeira
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY) // --> course é o atributo dentro de modulo usado como chave estrangeira
+    @Fetch(FetchMode.SUBSELECT) // --> Define como os dados serão trazidos na consultas
     private Set<ModuleModel> modules;
 
 }

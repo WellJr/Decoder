@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -30,10 +32,11 @@ public class ModuleModel  implements Serializable {
     private LocalDateTime creationDate;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // --> A informação aparece apenas em ações de escrita
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private CourseModel course;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // --> A informação aparece apenas em ações de escrita
-    @OneToMany(mappedBy = "module") // --> module é o atributo dentro de LESSON usado como chave estrangeira
+    @OneToMany(mappedBy = "module", fetch = FetchType.LAZY) // --> module é o atributo dentro de LESSON usado como chave estrangeira
+    @Fetch(FetchMode.SUBSELECT) // --> Define como os dados serão trazidos na consultas
     private Set<LessonModel> lessons;
 }
